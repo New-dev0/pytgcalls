@@ -3,7 +3,7 @@ import json
 from aiohttp import web
 from aiohttp.web_request import BaseRequest
 from telethon.tl.functions.phone import GetGroupParticipantsRequest
-from telethon.tl.types.phone import GroupParticipantsRequest
+from telethon.tl.types.phone import GroupParticipants
 
 
 class GetParticipants:
