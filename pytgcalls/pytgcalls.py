@@ -22,14 +22,19 @@ from .methods import Methods
 class PyTgCalls(Methods):
     def __init__(
         self,
+        api_id: int = None,
+        api_hash:str = None,
+        session= None,
         port: int = 24859,
         log_mode: int = 0,
         flood_wait_cache: int = 120,
-        *args,
-        **kwargs,
     ):  
-        app = TelegramClient(*args, **kwargs)
-        SyncApp = TelegramClient(*args, **kwargs)
+        app = TelegramClient(session,
+                             api_id=api_id, 
+                             api_hash=api_hash)
+        SyncApp = TelegramClient(session,
+                             api_id=api_id, 
+                             api_hash=api_hash)
         self._app = app
         self._syncapp = SyncApp
         self._app_core = None
