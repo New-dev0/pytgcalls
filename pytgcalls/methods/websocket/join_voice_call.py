@@ -2,9 +2,9 @@ import json
 
 from aiohttp import web
 from aiohttp.web_request import BaseRequest
-from pyrogram.raw.functions.phone import JoinGroupCall
-from pyrogram.raw.types import DataJSON
-from pyrogram.raw.types import Updates
+from telethon.tl.functions.phone import JoinGroupCallRequest
+from telethon.tl.types import DataJSON
+from telethon.tl.types import Updates
 
 
 class JoinVoiceCall:
@@ -37,7 +37,7 @@ class JoinVoiceCall:
         if chat_call is not None:
             try:
                 result: Updates = await self.pytgcalls._app.send(
-                    JoinGroupCall(
+                    JoinGroupCallRequest(
                         call=chat_call,
                         params=DataJSON(data=json.dumps(request_call)),
                         muted=False,

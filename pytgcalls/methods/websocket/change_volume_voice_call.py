@@ -2,7 +2,7 @@ import json
 
 from aiohttp import web
 from aiohttp.web_request import BaseRequest
-from pyrogram.raw.functions.phone import EditGroupCallParticipant
+from telethon.tl.functions.phone import EditGroupCallParticipantRequest
 
 
 class ChangeVolumeVoiceCall:
@@ -23,8 +23,8 @@ class ChangeVolumeVoiceCall:
                 chat_call = await self.pytgcalls._load_chat_call(
                     params['chat_id'],
                 )
-                await self.pytgcalls._app.send(
-                    EditGroupCallParticipant(
+                await self.pytgcalls._app(
+                    EditGroupCallParticipantRequest(
                         call=chat_call,
                         participant=self.pytgcalls._cache_user_peer[
                             int(params['chat_id'])

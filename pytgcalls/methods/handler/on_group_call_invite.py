@@ -22,6 +22,6 @@ class OnGroupCallInvite:
                     )
                 return func
         else:
-            code_err = 'PYROGRAM_CLIENT_IS_NOT_RUNNING'
+            code_err = 'TELETHON_CLIENT_IS_NOT_RUNNING'
             raise Exception(f'Error internal: {code_err}')
         return decorator

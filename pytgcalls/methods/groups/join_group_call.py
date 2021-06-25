@@ -2,7 +2,6 @@ import json
 import os
 
 import requests
-from pyrogram.raw.base import InputPeer
 
 from ..core import SpawnProcess
 from ..stream.stream_type import StreamType
@@ -19,7 +18,7 @@ class JoinGroupCall(SpawnProcess):
             file_path: str,
             bitrate: int = 48000,
             invite_hash: str = None,
-            join_as: InputPeer = None,
+            join_as = None,
             stream_type: StreamType = None,
     ):
         if join_as is None:
@@ -60,7 +59,7 @@ class JoinGroupCall(SpawnProcess):
             except Exception as e:
                 raise Exception('Error internal: UNKNOWN ->', e)
         else:
-            code_err = 'PYROGRAM_CLIENT_IS_NOT_RUNNING'
+            code_err = 'TELETHON_CLIENT_IS_NOT_RUNNING'
             if not self.pytgcalls._init_js_core:
                 code_err = 'JS_CORE_NOT_RUNNING'
             if not os.path.isfile(file_path):

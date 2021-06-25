@@ -30,7 +30,7 @@ class LeaveGroupCall(SpawnProcess):
                 ),
             )
         else:
-            code_err = 'PYROGRAM_CLIENT_IS_NOT_RUNNING'
+            code_err = 'TELETHON_CLIENT_IS_NOT_RUNNING'
             if chat_id not in self.pytgcalls._cache_user_peer:
                 code_err = 'GROUP_CALL_NOT_FOUND'
             if not self.pytgcalls._init_js_core:

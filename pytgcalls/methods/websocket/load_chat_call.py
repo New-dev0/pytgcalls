@@ -1,7 +1,7 @@
 from time import time
 
-from pyrogram.raw.functions.channels import GetFullChannel
-from pyrogram.raw.types.messages import ChatFull
+from telethon.tl.functions.channels import GetFullChannelRequest
+from telethon.tl.types.messages import ChatFull
 
 
 class LoadChatCall:
@@ -22,10 +22,10 @@ class LoadChatCall:
                 chat_id
             ]['full_chat']
         else:
-            chat = await self.pytgcalls._app.resolve_peer(chat_id)
+            chat = await self.pytgcalls._app.get_input_entity(chat_id)
             full_chat = (
-                await self.pytgcalls._app.send(
-                    GetFullChannel(channel=chat),
+                await self.pytgcalls._app(
+                    GetFullChannelRequest(channel=chat),
                 )
             ).full_chat.call
             self.pytgcalls._cache_full_chat[chat_id] = {

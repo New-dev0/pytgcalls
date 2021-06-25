@@ -2,8 +2,8 @@ import json
 
 from aiohttp import web
 from aiohttp.web_request import BaseRequest
-from pyrogram.raw.functions.phone import GetGroupParticipants
-from pyrogram.raw.types.phone import GroupParticipants
+from telethon.tl.functions.phone import GetGroupParticipantsRequest
+from telethon.tl.types.phone import GroupParticipantsRequest
 
 
 class GetParticipants:
@@ -16,8 +16,8 @@ class GetParticipants:
         if isinstance(params, str):
             params = json.loads(params)
         participants: GroupParticipants = (
-            await self.pytgcalls._app.send(
-                GetGroupParticipants(
+            await self.pytgcalls._app(
+                GetGroupParticipantsRequest(
                     call=await self.pytgcalls._load_chat_call(
                         params['chat_id'],
                     ),

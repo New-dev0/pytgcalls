@@ -2,7 +2,7 @@ import json
 
 from aiohttp import web
 from aiohttp.web_request import BaseRequest
-from pyrogram.raw.functions.phone import LeaveGroupCall
+from telethon.tl.functions.phone import LeaveGroupCallRequest
 
 
 class LeaveVoiceCall:
@@ -24,8 +24,8 @@ class LeaveVoiceCall:
             )
             if chat_call is not None:
                 # noinspection PyBroadException
-                await self.pytgcalls._app.send(
-                    LeaveGroupCall(
+                await self.pytgcalls._app(
+                    LeaveGroupCallRequest(
                         call=chat_call,
                         source=0,
                     ),

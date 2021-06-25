@@ -4,16 +4,17 @@ from typing import Callable
 from typing import Dict
 from typing import List
 
-from pyrogram import __version__
-from pyrogram import Client
-from pyrogram.raw.types import ChannelForbidden
-from pyrogram.raw.types import GroupCall
-from pyrogram.raw.types import GroupCallDiscarded
-from pyrogram.raw.types import InputGroupCall
-from pyrogram.raw.types import MessageActionInviteToGroupCall
-from pyrogram.raw.types import UpdateChannel
-from pyrogram.raw.types import UpdateGroupCall
-from pyrogram.raw.types import UpdateNewChannelMessage
+from telethon import __version__
+from telethon import TelegramClient, events
+from telethon.sync import TelegramClient as SyncClient
+from telethon.tl.types import ChannelForbidden
+from telethon.tl.types import GroupCall
+from telethon.tl.types import GroupCallDiscarded
+from telethon.tl.types import InputGroupCall
+from telethon.tl.types import MessageActionInviteToGroupCall
+from telethon.tl.types import UpdateChannel
+from telethon.tl.types import UpdateGroupCall
+from telethon.tl.types import UpdateNewChannelMessage
 
 from .methods import Methods
 
@@ -21,12 +22,16 @@ from .methods import Methods
 class PyTgCalls(Methods):
     def __init__(
         self,
-        app: Client,
         port: int = 24859,
         log_mode: int = 0,
         flood_wait_cache: int = 120,
-    ):
+        *args,
+        **kwargs,
+    ):  
+        app = TelegramClient(*args, **kwargs)
+        SyncApp = TelegramClient(*args, **kwargs)
         self._app = app
+        self._syncapp = SyncApp
         self._app_core = None
         self._sio = None
         self._host = '127.0.0.1'
@@ -86,17 +91,10 @@ class PyTgCalls(Methods):
                     'actually installed is '
                     f"{node_result['version']}",
                 )
-            if int(__version__.split('.')[1]) < 2 and \
-                    int(__version__.split('.')[0]) == 1:
-                raise Exception(
-                    'Needed pyrogram 1.2.0+, '
-                    'actually installed is '
-                    f'{__version__}',
-                )
             try:
                 # noinspection PyBroadException
-                @self._app.on_raw_update()
-                async def on_close(client, update, _, data2):
+                @self._app.on(events.Raw())
+                async def on_close(update):
                     if isinstance(update, UpdateGroupCall):
                         if isinstance(update.call, GroupCallDiscarded):
                             chat_id = int(f'-100{update.chat_id}')
@@ -116,29 +114,6 @@ class PyTgCalls(Methods):
                             }
                     if isinstance(update, UpdateChannel):
                         chat_id = int(f'-100{update.channel_id}')
-                        if len(data2) > 0:
-                            if isinstance(
-                                data2[update.channel_id],
-                                ChannelForbidden,
-                            ):
-                                for event in self._on_event_update[
-                                    'KICK_HANDLER'
-                                ]:
-                                    await event['callable'](
-                                        chat_id,
-                                    )
-                                # noinspection PyBroadException
-                                try:
-                                    self.leave_group_call(
-                                        chat_id,
-                                        'kicked_from_group',
-                                    )
-                                except Exception:
-                                    pass
-                                try:
-                                    del self._cache_user_peer[chat_id]
-                                except Exception:
-                                    pass
                     if isinstance(
                             update,
                             UpdateGroupCall,
@@ -179,12 +154,12 @@ class PyTgCalls(Methods):
                                     'GROUP_CALL_HANDLER'
                                 ]:
                                     await event['callable'](
-                                        client, update.message,
+                                        self._app, update.message,
                                     )
                         except Exception:
                             pass
-                self._app.start()
-                self._my_id = self._app.get_me()['id']  # noqa
+                with self._syncapp as Temp:
+                    self._my_id = Temp.get_me()['id']  # noqa
                 self._cache_local_peer = self._app.resolve_peer(
                     self._my_id,
                 )
@@ -209,7 +184,7 @@ class PyTgCalls(Methods):
             self._start_web_app()
             self.is_running = True
         else:
-            raise Exception('NEED_PYROGRAM_CLIENT')
+            raise Exception('NEEm telethon_CLIENT')
         return self
 
     def _add_handler(self, type_event: str, func):
