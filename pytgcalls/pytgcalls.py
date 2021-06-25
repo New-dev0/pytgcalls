@@ -164,10 +164,10 @@ class PyTgCalls(Methods):
                         except Exception:
                             pass
                 with self._syncapp as Temp:
-                    self._my_id = Temp.get_me()['id']  # noqa
-                self._cache_local_peer = self._app.resolve_peer(
+                    self._my_id = Temp.get_me().id  # noqa
+                    self._cache_local_peer = self._app.get_input_entity(
                     self._my_id,
-                )
+                    )
                 if before_start_callable is not None:
                     # noinspection PyBroadException
                     try:
@@ -189,7 +189,7 @@ class PyTgCalls(Methods):
             self._start_web_app()
             self.is_running = True
         else:
-            raise Exception('NEEm telethon_CLIENT')
+            raise Exception('NEED_TELETHON_CLIENT')
         return self
 
     def _add_handler(self, type_event: str, func):
