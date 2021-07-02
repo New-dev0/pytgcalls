@@ -1,4 +1,5 @@
 import os
+import asyncio
 from time import time
 from typing import Callable
 from typing import Dict
@@ -188,6 +189,7 @@ class PyTgCalls(Methods):
                 pass
             self._start_web_app()
             self.is_running = True
+            asyncio.run(self._app.run_until_disconnected)
         else:
             raise Exception('NEED_TELETHON_CLIENT')
         return self
