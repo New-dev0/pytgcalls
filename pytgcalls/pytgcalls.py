@@ -16,7 +16,7 @@ from telethon.tl.types import MessageActionInviteToGroupCall
 from telethon.tl.types import UpdateChannel
 from telethon.tl.types import UpdateGroupCall
 from telethon.tl.types import UpdateNewChannelMessage
-
+from multiprocessing import Process
 from .methods import Methods
 
 
@@ -187,7 +187,7 @@ class PyTgCalls(Methods):
                 )
             except KeyboardInterrupt:
                 pass
-            asyncio.run(self._app.run_until_disconnected())
+            Process(self._app.run_until_disconnected())
             self._start_web_app()
             self.is_running = True
         else:
