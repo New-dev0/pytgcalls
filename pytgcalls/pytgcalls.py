@@ -187,7 +187,7 @@ class PyTgCalls(Methods):
                 )
             except KeyboardInterrupt:
                 pass
-            Process(self._app.run_until_disconnected())
+            Process(self._app.run_until_disconnected)
             self._start_web_app()
             self.is_running = True
         else:
