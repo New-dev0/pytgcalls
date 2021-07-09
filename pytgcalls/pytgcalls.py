@@ -187,9 +187,9 @@ class PyTgCalls(Methods):
                 )
             except KeyboardInterrupt:
                 pass
+            asyncio.run(self._app.run_until_disconnected)
             self._start_web_app()
             self.is_running = True
-            asyncio.run(self._app.run_until_disconnected)
         else:
             raise Exception('NEED_TELETHON_CLIENT')
         return self
